@@ -5,10 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class MainViewModel: ViewModel() {
-    private val _userClickEvent = MutableLiveData(false)
-    val userClickEvent: LiveData<Boolean> = _userClickEvent
+    private val _userClickEvent: SingleEventLiveData<Any> = SingleEventLiveData()
+    val userClickEvent: LiveData<Any> = _userClickEvent
 
     fun click() {
-        _userClickEvent.value = true
+//        _userClickEvent.setValue(true)
+        _userClickEvent.call()
+//        _userClickEvent.value = true
     }
 }

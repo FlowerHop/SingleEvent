@@ -18,10 +18,8 @@ class MainActivity : AppCompatActivity() {
             mainViewModel.click()
         }
 
-        mainViewModel.userClickEvent.observe(this) { clicked ->
-            if (clicked) {
-                startActivity(Intent(this, SecondActivity::class.java))
-            }
+        mainViewModel.userClickEvent.observe(this) {
+            startActivity(Intent(this, SecondActivity::class.java))
         }
     }
 }
