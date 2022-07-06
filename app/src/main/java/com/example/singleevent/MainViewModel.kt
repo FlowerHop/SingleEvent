@@ -1,14 +1,18 @@
 package com.example.singleevent
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.launch
 
 class MainViewModel: ViewModel() {
-    private val _userClickEvent: MutableLiveData<Event<Boolean>> = MutableLiveData()
-    val userClickEvent: LiveData<Event<Boolean>> = _userClickEvent
+    private val _userClickEvent: MutableSharedFlow<String> = MutableSharedFlow()
+    val userClickEvent: SharedFlow<String> = _userClickEvent
 
     fun click() {
-        _userClickEvent.value = Event(true)
+        viewModelScope.launch {
+            _userClickEvent.emit("clicked")
+        }
     }
 }
