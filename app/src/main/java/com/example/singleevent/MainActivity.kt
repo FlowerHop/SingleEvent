@@ -6,15 +6,13 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.example.singleevent.databinding.ActivityMainBinding
+import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel by viewModels<MainViewModel>()
-
-    private val eventLogger = Observer<Event<Boolean>> { event ->
-        Log.d("EventLogger", ": ${event.content}")
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,12 +23,11 @@ class MainActivity : AppCompatActivity() {
             mainViewModel.click()
         }
 
-        mainViewModel.userClickEvent.observe(this) {
-            it.getContentIfNotHandled()?.let {
-                startActivity(Intent(this, SecondActivity::class.java))
+        lifecycleScope.launchWhenResumed {
+            mainViewModel.userClickEvent.collectLatest {
+                Log.d("EventLogger", "event logged: $it")
+                startActivity(Intent(this@MainActivity, SecondActivity::class.java))
             }
         }
-
-        mainViewModel.userClickEvent.observe(this, eventLogger)
     }
 }
